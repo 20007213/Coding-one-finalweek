@@ -149,3 +149,38 @@
         const texture1 = textureLoader.load("texture1.jpg");
         const boxInside = new THREE.Mesh(
           new THREE.BoxBuffe
+          new THREE.BoxBufferGeometry(0.2, 0.1, 0.01),
+           new THREE.MeshLambertMaterial({ map: texture1 })
+         );
+         // add a bouncing box
+         boxInside.position.set(0, 0.3, -0.1);
+         let grow = 0;
+         boxInside.userData.update = function (delta) {
+           grow += delta;
+           boxInside.position.y = 0.3 + Math.sin(grow * 2) / 20;
+           boxInside.rotation.z = 0.0 + Math.cos(grow) / 2;
+         };
+         scene.add(boxInside);
+        
+         // add the red house
+         new House(scene);
+
+         function update(delta) {
+           particles1.update(delta);
+           particles2.update(delta);
+           controls.update();
+           boxInside.userData.update(delta);
+           stats.update();
+         }
+
+         function animate() {
+           delta = clock.getDelta();
+           update(delta);
+           renderer.render(scene, camera);
+           requestAnimationFrame(animate);
+         }
+         animate();
+       }
+     </script>
+   </body>
+</html>
